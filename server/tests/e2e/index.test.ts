@@ -76,6 +76,7 @@ describe("Data Extractor e2e test", () => {
                         password: credentials.password,
                     })
                     .expectStatus(200)
+                    .stores('authToken', 'token')
                     .inspect();
             });
             it.each([
@@ -105,6 +106,52 @@ describe("Data Extractor e2e test", () => {
                         .expectStatus(400);
                 }
             });
+        });
+        describe("User Details", () => {
+            it("should check if auth is working", async () => {
+                await pactum
+                    .spec()
+                    .get('/auth/ok')
+                    .expectStatus(200)
+                    .expectJsonLike({ ok: true })
+            });
+            it("should check if auth is working on user route", async () => {
+                await pactum
+                    .spec()
+                    .get('/user')
+                    .expectStatus(401)
+            });
+            it("should get current user", async () => {
+                await pactum
+                    .spec()
+                    .get('/user')
+                    .withBearerToken('$S{authToken}')
+                    .expectStatus(200)
+            });
+
+        });
+        describe("Gig Details", () => {
+
+            it("should check if auth is working", async () => {
+                await pactum
+                    .spec()
+                    .get('/gigs')
+                    .expectStatus(401)
+
+            });
+
+            // it("should get a list user", async () => {
+            //     await pactum
+            //     .spec()
+            //     .get('/gigs')
+            //     .withBearerToken('$S{authToken}')
+            //     // .withJson({
+            //     //     accountId: credentials.email,
+            //     // })
+            //     .expectStatus(200)
+            //     .inspect();
+            // });
+
         });
 
     }
