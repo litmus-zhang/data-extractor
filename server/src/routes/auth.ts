@@ -23,38 +23,35 @@ export const authWrapper = new Elysia({ name: "better_auth" })
 		},
 	})
 
-export const authGuard = new Elysia()
-	// .guard({
-	// 	beforeHandle: [
-	// 		({ status, headers: { Authorization } }) => {
-	// 			if (!Authorization) return status(401)
-	// 		},
-	// 		({ query: { name } }) => {
-	// 			console.log(name)
-	// 		}
-	// 	],
-	// 	afterResponse({ responseValue }) {
-	// 		console.log(responseValue)
-	// 	}
-	// })
-	.as("global")
-	.onBeforeHandle(async ({ request, set, status, headers }) => {
-		// 1️⃣  Pick the token – you can adapt this to cookies, query‑param, etc.
-		const authHeader = request.headers.get("authorization");
-		if (!authHeader?.startsWith("Bearer ")) {
-			// `error` creates an Elysia HTTPError that will be turned into a 401 response
-			return status(401, "Missing or malformed Authorization header");
 
-		}
-		// const token = authHeader.slice(7); // strip “Bearer ”
-		// 2️⃣  Verify the token (you already have a function for that)
-		const payload = await auth.api.getSession({
-			headers: {
-				authorization: authHeader
-			}
-		});   // ← returns `{ id, role, … }` or throws
-		// 3️⃣  Attach the payload to the request context so route handlers can use it
-		//     (`decorate` on the request works because the request object is mutable)
-		(request as any).user = payload;          // <- `any` is fine here; later we’ll type it
-		return payload;
-	});
+export const authGuard = new Elysia({ name: "authGuard" })
+  .macro({
+    auth: {
+      // You can use this in route definitions for strong typing
+      async resolve({ request, set }) {
+        // Verify the session from cookies or Authorization header
+        const session = await auth.api.getSession({
+          headers: request.headers,
+        });
+
+        if (!session) {
+          set.status = 401;
+          throw new Error("Unauthorized");
+        }
+
+        // Expose user and session to the route context
+        return {
+          user: session.user,
+          session: session.session,
+        };
+      },
+    },
+  })
+  .derive(async ({ request, set }) => {
+    // Auto-inject user/session in the request lifecycle
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (session) return { user: session.user, session: session.session };
+
+    // Optionally, leave undefined if not logged in
+    return { user: null, session: null };
+  });

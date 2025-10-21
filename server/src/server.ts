@@ -11,6 +11,7 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { Logestic } from "logestic";
 import { gigRoutes } from "./routes/gigs.ts";
 import { userRoutes } from "./routes/user.ts";
+import { aiRoutes } from "./routes/ai.ts";
 
 export const app = new Elysia()
 	.use(
@@ -45,8 +46,17 @@ export const app = new Elysia()
 		}),
 	)
 	.mount("/auth", auth.handler)
+	.use(authGuard)
+	.get("/me", ({ user, session, set }) => {
+		if (!user) {
+			set.status = 401;
+			return { error: "Unauthorized" };
+		}
+		return { user, session };
+	})
 	.use(gigRoutes)
 	.use(userRoutes)
+	.use(aiRoutes)
 
 
 export type App = typeof app;

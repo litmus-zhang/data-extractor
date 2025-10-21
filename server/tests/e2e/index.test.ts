@@ -3,11 +3,12 @@ import { api } from "../api.ts";
 import { faker } from "@faker-js/faker"
 import * as pactum from 'pactum';
 import { clearDb, db } from "../../src/db/index.ts";
+import { time } from "drizzle-orm/mysql-core";
 
 
 describe("Data Extractor e2e test", () => {
     beforeAll(async () => {
-        pactum.request.setBaseUrl("http://localhost:3000");
+        pactum.request.setBaseUrl("http://localhost:4000");
 
     });
     afterAll(async () => {
@@ -138,6 +139,41 @@ describe("Data Extractor e2e test", () => {
                     .get('/gigs')
                     .expectStatus(401)
 
+            });
+
+            // it("should get a list user", async () => {
+            //     await pactum
+            //     .spec()
+            //     .get('/gigs')
+            //     .withBearerToken('$S{authToken}')
+            //     // .withJson({
+            //     //     accountId: credentials.email,
+            //     // })
+            //     .expectStatus(200)
+            //     .inspect();
+            // });
+
+        });
+        describe("LLM Integration", () => {
+
+            it("should check if auth is working", async () => {
+                await pactum
+                    .spec()
+                    .get('/ai/weather')
+                    .withQueryParams('city', 'New York')
+                    .expectStatus(401)
+
+            });
+            it("should get weather condition", async () => {
+                await pactum
+                    .spec()
+                    .get('/ai/weather')
+                    .withBearerToken('$S{authToken}')
+                    .withQueryParams('city', 'New York')
+                    .expectStatus(200)
+                    .expectBodyContains('The weather in New York');
+            }, {
+                timeout: 10000
             });
 
             // it("should get a list user", async () => {

@@ -3,7 +3,7 @@ import { Elysia } from "elysia";
 import { authGuard, authWrapper } from "./auth.ts";
 
 export const userRoutes = new Elysia()
-    .use(authWrapper)
+    .use(authGuard)
     .get("/user", () => {
         // `auth` is the object returned from the macro (user + session)
         return {
