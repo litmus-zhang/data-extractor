@@ -12,6 +12,7 @@ import { Logestic } from "logestic";
 import { gigRoutes } from "./routes/gigs.ts";
 import { userRoutes } from "./routes/user.ts";
 import { aiRoutes } from "./routes/ai.ts";
+import { config } from "./config.ts";
 
 export const app = new Elysia()
 	.use(
@@ -29,7 +30,7 @@ export const app = new Elysia()
 	)
 	.use(
 		cors({
-			origin: "http://localhost:3001",
+			origin: ["http://localhost:3001", `chrome-extension://${config.EXTENSION_ID}`],
 			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 			credentials: true,
 			allowedHeaders: ["Content-Type", "Authorization"],

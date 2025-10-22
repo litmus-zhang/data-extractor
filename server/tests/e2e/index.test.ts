@@ -3,7 +3,6 @@ import { api } from "../api.ts";
 import { faker } from "@faker-js/faker"
 import * as pactum from 'pactum';
 import { clearDb, db } from "../../src/db/index.ts";
-import { time } from "drizzle-orm/mysql-core";
 
 
 describe("Data Extractor e2e test", () => {

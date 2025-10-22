@@ -1,3 +1,4 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import env from "env-var";
 
 export const config = {
@@ -18,8 +19,17 @@ export const config = {
 		.default("it's a secret")
 		.asString(),
 	POSTHOG_HOST: env.get("POSTHOG_HOST").default("localhost").asString(),
+	GOOGLE_GENERATIVE_AI_API_KEY: env
+		.get("GOOGLE_GENERATIVE_AI_API_KEY")
+		.required()
+		.asString(),
+	EXTENSION_ID: env.get("EXTENSION_ID").required().asString(),
 	LOCK_STORE: env
 		.get("LOCK_STORE")
 		.default("memory")
 		.asEnum(["memory", "redis"]),
 };
+
+export const google = createGoogleGenerativeAI({
+  apiKey: config.GOOGLE_GENERATIVE_AI_API_KEY,
+});
