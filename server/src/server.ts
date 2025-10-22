@@ -30,7 +30,7 @@ export const app = new Elysia()
 	)
 	.use(
 		cors({
-			origin: ["http://localhost:3001", `chrome-extension://${config.EXTENSION_ID}`],
+			origin: config.AUTH_CORS,
 			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 			credentials: true,
 			allowedHeaders: ["Content-Type", "Authorization"],

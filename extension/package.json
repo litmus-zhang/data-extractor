@@ -39,11 +39,13 @@
   },
   "manifest": {
     "host_permissions": [
-      "http://localhost:4000/*"
+      "http://localhost:4000/*",
+      "https://*/*", "http://*/*"
     ],
     "permissions": [
       "storage",
-      "tabs"
+      "tabs",
+      "scripting"
     ]
   }
 }

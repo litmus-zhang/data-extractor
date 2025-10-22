@@ -1,4 +1,4 @@
-import { cn } from "src/lib/utils"
+import { cn, loginUser } from "src/lib/utils"
 import { Button } from "src/components/ui/button"
 import {
   Card,
@@ -18,10 +18,17 @@ export function LoginForm({
   const { register, handleSubmit } = useForm<{
     email: string
     password: string
-  }>()
- const handleSubmitForm = (data: { email: string; password: string }) => {
-    console.log(data)
- }
+  }>({
+    defaultValues: {
+      email: "",
+      password: ""
+    }
+  })
+  const onSubmit = async (data: { email: string; password: string }) => {
+    const { email, password } = data
+    const res = await loginUser(email, password)
+    console.log(res)
+  }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -32,7 +39,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>

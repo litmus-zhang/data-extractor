@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { bearer, openAPI } from "better-auth/plugins";
 import { db } from "./db/index.ts";
 import { schema } from "./db/schema.ts";
+import { config } from "./config.ts";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -10,6 +11,7 @@ export const auth = betterAuth({
 		schema,
 	}),
 	basePath: "/",
+	trustedOrigins: config.AUTH_CORS,
 	emailAndPassword: {
 		enabled: true,
 	},

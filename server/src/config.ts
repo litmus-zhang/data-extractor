@@ -28,8 +28,9 @@ export const config = {
 		.get("LOCK_STORE")
 		.default("memory")
 		.asEnum(["memory", "redis"]),
+	AUTH_CORS: env.get("AUTH_CORS").default("http://localhost:3001").asString().split(","),
 };
 
 export const google = createGoogleGenerativeAI({
-  apiKey: config.GOOGLE_GENERATIVE_AI_API_KEY,
+	apiKey: config.GOOGLE_GENERATIVE_AI_API_KEY,
 });

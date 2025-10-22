@@ -6,9 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-
-// Example inside popup.tsx or a background script
-const API_BASE = "https://your-elysia-backend.com/api"
+export const API_BASE = process.env.PLASMO_PUBLIC_API_URL || "http://localhost:4000"
 
 export async function loginUser(email: string, password: string) {
   const { data, error } = await authClient.signIn.email({ email, password })

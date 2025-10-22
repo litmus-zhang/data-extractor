@@ -1,5 +1,5 @@
 // src/routes/gigs.ts
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { authGuard, authWrapper } from "./auth.ts";
 
 export const gigRoutes = new Elysia()
@@ -18,4 +18,23 @@ export const gigRoutes = new Elysia()
         return { body };
     }, {
         auth: true
+    })
+    .post("/api/capture", async ({ body }) => {
+        console.log("Received page data:", body)
+
+        // Save to DB or process further
+        return { message: "Captured successfully", received: body }
+    })
+    .post("/api/analyze", async ({ body: { title, url, content } }) => {
+        // Pretend you do NLP, summarization, or categorization here
+        return {
+            summary: `Received "${title}" (${url.length} chars URL, ${content.length} chars content).`,
+            sentiment: "positive"
+        }
+    }, {
+        body: t.Object({
+            title: t.String(),
+            url: t.String(),
+            content: t.String()
+        })
     })
