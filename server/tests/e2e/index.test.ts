@@ -1,17 +1,23 @@
-import { describe, it, expect, beforeAll, afterAll } from "bun:test";
-import { api } from "../api.ts";
+import { describe, it, beforeAll, afterAll } from "bun:test";
 import { faker } from "@faker-js/faker"
 import * as pactum from 'pactum';
-import { clearDb, db } from "../../src/db/index.ts";
+import { clearDb } from "../../src/db/index.ts";
+import { App, app } from "../../src/server.ts";
 
+
+let server: App
+let baseURL: string
 
 describe("Data Extractor e2e test", () => {
     beforeAll(async () => {
-        pactum.request.setBaseUrl("http://localhost:4000");
+        server = app.listen(0)
+        baseURL = `http://localhost:${server.server?.port}`
+        pactum.request.setBaseUrl(baseURL)
 
     });
     afterAll(async () => {
         await clearDb()
+        await server.stop()
 
     });
     describe("General Healthcheck", () => {

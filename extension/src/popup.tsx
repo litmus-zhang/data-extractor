@@ -5,7 +5,6 @@ import "./style.css"
 import { SignupForm } from "./components/signup-form";
 import { Button } from "./components/ui/button";
 import { useState } from "react";
-import { API_BASE } from "./lib/utils";
 
 function IndexPopup() {
   // const { data, isPending, error } = authClient.useSession();
