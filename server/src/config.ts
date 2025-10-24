@@ -29,6 +29,7 @@ export const config = {
 		.default("memory")
 		.asEnum(["memory", "redis"]),
 	AUTH_CORS: env.get("AUTH_CORS").default("http://localhost:3001").asString().split(","),
+	KLAVIS_API_KEY: env.get("KLAVIS_API_KEY").required().asString(),
 };
 
 export const google = createGoogleGenerativeAI({

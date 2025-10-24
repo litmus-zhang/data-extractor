@@ -7,8 +7,8 @@ export const testMcpClient = new MCPClient({
       command: "npx",
       args: ["-y", "wikipedia-mcp"]
     },
-    weather: {
-      url: new URL(`https://server.smithery.ai/@smithery-ai/national-weather-service/mcp?api_key=${process.env.SMITHERY_API_KEY}`)
-    },
+    // weather: {
+    //   url: new URL(`https://server.smithery.ai/@smithery-ai/national-weather-service/mcp?api_key=${process.env.SMITHERY_API_KEY}`)
+    // },
   }
 });

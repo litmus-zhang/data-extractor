@@ -9,7 +9,7 @@ import { opentelemetry } from "@elysiajs/opentelemetry";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { Logestic } from "logestic";
-import { gigRoutes } from "./routes/gigs.ts";
+import { gigRoutes } from "./routes/property.ts";
 import { userRoutes } from "./routes/user.ts";
 import { aiRoutes } from "./routes/ai.ts";
 import { config } from "./config.ts";

@@ -4,16 +4,19 @@ import { authClient } from "./auth/auth-client"
 import "./style.css"
 import { SignupForm } from "./components/signup-form";
 import { Button } from "./components/ui/button";
-import { useState } from "react";
+import React, { useEffect, useState } from "react"
+
 
 function IndexPopup() {
   // const { data, isPending, error } = authClient.useSession();
   const [loading, setLoading] = useState(false)
-  const [response, setResponse] = useState<any>(null)
+  const [data, setData] = useState<any>(null)
+
+  // const [response, setResponse] = useState<any>(null)
 
   const analyzePage = async () => {
     setLoading(true)
-    setResponse(null)
+    setData(null)
 
     // Step 1: Get data from active tab
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
@@ -22,7 +25,7 @@ function IndexPopup() {
       func: () => ({
         url: window.location.href,
         title: document.title,
-        content: document.body.innerText.slice(0, 1500)
+        content: document.body.innerText.slice(0,1500)
       })
     })
 
@@ -39,10 +42,10 @@ function IndexPopup() {
       const data = await res.json()
 
       // Step 3: Show backend response in popup
-      setResponse(data)
+      setData(data)
     } catch (err) {
       console.error("Error sending data:", err)
-      setResponse({ error: "Failed to reach backend" })
+      setData({ error: "Failed to reach backend" })
     } finally {
       setLoading(false)
     }
@@ -61,11 +64,20 @@ function IndexPopup() {
   // if (data) {
   //   return <div className="flex items-center justify-center h-[500px] w-[400px] flex-col gap-4 p-4">Signed in as {data.user.name}</div>
   // }
+
+  useEffect(() => {
+    // Listen for messages from background
+    const listener = (message: any) => {
+      if (message.type === "BACKEND_RESPONSE") setData(message.data)
+    }
+    chrome.runtime.onMessage.addListener(listener)
+    return () => chrome.runtime.onMessage.removeListener(listener)
+  }, [])
   return (
     <div className="flex items-center justify-center h-[500px] w-[400px] flex-col gap-4 p-4 overflow-y-auto ">
       {/* <h1 className="text-2xl font-bold">Popup page</h1>
         <SignupForm /> */}
-      <h2 className="font-bold text-lg mb-2">Page Analyzer</h2>
+      <h2 className="font-bold text-lg mb-2">Property Analyzer</h2>
       <Button
         onClick={analyzePage}
         disabled={loading}
@@ -74,10 +86,17 @@ function IndexPopup() {
         {loading ? "Analyzing..." : "Analyze This Page"}
       </Button>
 
-      {response && (
+      {/* {response && (
         <div className="mt-3 p-2 border rounded bg-gray-50 max-w-[400px] overflow-auto">
           <pre>{JSON.stringify(response, null, 2)}</pre>
         </div>
+      )} */}
+      {data ? (
+        <pre className="mt-3 p-2 border rounded bg-gray-50 max-w-[400px] overflow-auto">
+          {JSON.stringify(data, null, 2)}
+        </pre>
+      ) : (
+        <p>No data yet...</p>
       )}
     </div>
   )
