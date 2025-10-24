@@ -4,6 +4,8 @@ console.log(
 )
 
 import type { PlasmoCSConfig } from "plasmo"
+import { sendToBackground } from "@plasmohq/messaging"
+
 
 export const config: PlasmoCSConfig = {
   matches: ["https://www.onthemarket.com/*", "https://www.zillow.com/*", "https://www.bayut.com/", "https://jiji.ng/*"],
@@ -33,3 +35,9 @@ chrome.runtime.sendMessage({
   }
 })
 
+const resp = await sendToBackground({
+  name: "page_data",
+  body: pageData
+})
+ 
+console.log(resp)

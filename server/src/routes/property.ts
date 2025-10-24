@@ -29,10 +29,11 @@ export const gigRoutes = new Elysia()
     .post("/api/analyze", async ({ body: { title, url, content } }) => {
         // Pretend you do NLP, summarization, or categorization here
         // analyzing content 
-        console.log({ title, url, content })
+        // console.log({ title, url, content })
         const mastraService = new MastraService();
         const analysis = await mastraService.analyzeProperty(title, url, content);
-        return (analysis)
+        return JSON.parse(analysis!)
+        return analysis
     }, {
         body: t.Object({
             title: t.String(),

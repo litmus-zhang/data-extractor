@@ -12,6 +12,8 @@ export const analystOutputSchema = z.object({
   investment_potential: z.record(z.string(), z.string()).describe('Investment potential of the property'),
   rental_yield_estimates: z.record(z.string(), z.string()).describe('Rental yield estimates of the property'),
   price_analytics: z.record(z.string(), z.string()).describe('Price analytics of the property'),
+  title: z.string().describe('City name'),
+  url: z.string().describe("Property URL")
 })
 export const analystTool = createTool({
   id: 'get-property',

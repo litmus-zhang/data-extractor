@@ -21,6 +21,7 @@ export class MastraService {
         try {
             const result = await agent.generate(`Analyze the property:${title} ,${url} , with the details: ${content}`);
             return this.stripFirstFence(result.text)
+            //  return JSON.parse(stripped!)
         } catch (error) {
             console.error("Agent error:", error);
             throw new Error("An error occurred while processing your request");

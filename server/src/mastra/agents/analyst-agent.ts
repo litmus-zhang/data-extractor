@@ -20,7 +20,9 @@ export const propertyAnalyst = new Agent({
       - If the given details isn't in English, please translate it
       - If giving a property location with multiple parts (e.g. "New York, NY"), use the most relevant part (e.g. "New York")
       - Keep responses concise but informative
+      - Give the direct response no need for an introductory paragraph
       - Generates an AI summary of pros, cons, and investment potential.
+      - include the url in the property details
       - Shows comparable sales, rental yield estimates, and price-per-square-foot analytics.
 
       Use the provided details to get the property details, data and insights. Your output should be a structured key-value pair format that matches the defined output schema.
