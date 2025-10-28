@@ -10,7 +10,7 @@ export const createMcpAgent = async (userId: string = 'test-user'): Promise<Agen
 
   // Create a Strata MCP Server with Gmail and Slack
   const response = await klavis.mcpServer.createStrataServer({
-    servers: [ Klavis.McpServerName.Airtable, Klavis.McpServerName.Pipedrive ],
+    servers: [Klavis.McpServerName.Airtable, Klavis.McpServerName.Pipedrive],
     userId
   });
 
@@ -34,7 +34,8 @@ export const createMcpAgent = async (userId: string = 'test-user'): Promise<Agen
   // Create agent
   return new Agent({
     name: 'Klavis MCP Agent',
-    instructions: `You are an AI agent with access to MCP tools.`,
+    instructions: `You are an AI agent with access to MCP tools.
+    `,
     model: google('gemini-2.5-pro'),
     tools: await mcpClient.getTools()
   });

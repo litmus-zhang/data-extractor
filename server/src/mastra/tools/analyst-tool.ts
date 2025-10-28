@@ -15,13 +15,15 @@ export const analystOutputSchema = z.object({
   title: z.string().describe('City name'),
   url: z.string().describe("Property URL")
 })
+
+export const analystInputSchema = z.object({
+  content: z.string().describe('Property details'),
+  title: z.string().describe('City name'),
+  url: z.string().describe("Property URL")
+})
 export const analystTool = createTool({
   id: 'get-property',
   description: 'Get property data, details and give insights',
-  inputSchema: z.object({
-    content: z.record(z.string(), z.string()).describe('Property details'),
-    title: z.string().describe('City name'),
-    url: z.string().describe("Property URL")
-  }),
+  inputSchema: analystInputSchema ,
   outputSchema: analystOutputSchema,
 });

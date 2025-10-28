@@ -13,6 +13,22 @@ const RegisterSchema = z.object({
   }),
 }).merge(LoginSchema)
 
+const PromptResponseSchema = {
+  "type": "object",
+  "properties": {
+    "comparable_sales": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "string"
+      }
+    },
+    "rental_estimates": {
+      "type": "string",
+    }
+  },
+  "required": ["comparable_sales", "rental_estimates"],
+  "additionalProperties": false
+}
 
-
-export { LoginSchema, RegisterSchema }
+export { LoginSchema, RegisterSchema, PromptResponseSchema }
