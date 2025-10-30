@@ -35,7 +35,7 @@ chrome.runtime.sendMessage({
   }
 })
 
-const resp = await sendToBackground({
+const resp =  sendToBackground({
   name: "page_data",
   body: pageData
 })
