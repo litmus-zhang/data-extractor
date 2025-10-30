@@ -3,10 +3,10 @@ import { z } from 'zod';
 
 
 export const analystOutputSchema = z.object({
-  Summary: z.string().describe('Summary of the property'),
-  Insights: z.record(z.string(), z.string()).describe('Insights about the property'),
-  Pros: z.record(z.string(), z.string()).describe('Pros of the property'),
-  Cons: z.record(z.string(), z.string()).describe('Cons of the property details'),
+  summary: z.string().describe('Summary of the property'),
+  insights: z.record(z.string(), z.string()).describe('Insights about the property'),
+  pros: z.record(z.string(), z.string()).describe('Pros of the property'),
+  cons: z.record(z.string(), z.string()).describe('Cons of the property details'),
   longlat: z.record(z.string(), z.string()).describe('Longitude and latitude of the property details'),
   location: z.string(),
   investment_potential: z.record(z.string(), z.string()).describe('Investment potential of the property'),
