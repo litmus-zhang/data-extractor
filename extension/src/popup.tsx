@@ -19,7 +19,6 @@ function IndexPopup() {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any>(null)
   const [analysis, setAnalysis] = useState<any>(null)
-  const prop_data = usePort("prop_data")
   console.log({ data })
 
   // const [response, setResponse] = useState<any>(null)

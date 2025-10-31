@@ -1,6 +1,8 @@
 import { Mastra } from "@mastra/core";
 import { mastra } from "../index.ts";
 import { stripFirstFence } from "../../utils.ts";
+import { jsonrepair } from 'jsonrepair'
+
 
 export class MastraService {
     private ai: Mastra
@@ -14,11 +16,10 @@ export class MastraService {
 
         try {
             const result = await agent.generate(`Analyze the property:${title} ,${url} , with the details: ${content}`);
-            return stripFirstFence(result.text)
-            //  return JSON.parse(stripped!)
+            return jsonrepair(result.text)
         } catch (error) {
             console.error("Agent error:", error);
-            throw new Error("An error occurred while processing your request");
+            throw new Error("An error occurred while processing your request", { cause: error });
         }
     }
     async addToCRM(title: string, url: string, content: string) {

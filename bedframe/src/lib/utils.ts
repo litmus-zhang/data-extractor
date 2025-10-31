@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { PromptResponseSchema } from "./types";
 import { jsonrepair } from "jsonrepair";
 
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

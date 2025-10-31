@@ -32,7 +32,7 @@ export const gigRoutes = new Elysia()
         // console.log({ title, url, content })
         const mastraService = new MastraService();
         const analysis = await mastraService.analyzeProperty(title, url, content);
-        return JSON.parse(analysis!)
+        // return JSON.parse(analysis!)
         return analysis
     }, {
         body: t.Object({

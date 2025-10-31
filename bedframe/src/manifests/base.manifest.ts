@@ -47,6 +47,18 @@ export const baseManifest = {
       matches: ["<all_urls>"],
     },
   ],
+  content_scripts: [
+    {
+      matches: [
+        "https://www.onthemarket.com/*",
+        "https://www.zillow.com/*",
+        "https://www.bayut.com/",
+        "https://jiji.ng/*",
+      ],
+      js: ["scripts/content-scripts.ts"]
+
+    }
+  ],
   commands: {
     _execute_action: {
       suggested_key: {
@@ -59,8 +71,15 @@ export const baseManifest = {
     },
   },
   permissions: [
-    "activeTab", 
+    "activeTab",
     "storage",
     "tabs",
     "scripting"],
+  host_permissions: [
+    "https://www.onthemarket.com/*",
+    "https://www.zillow.com/*",
+    "https://www.bayut.com/",
+    "https://jiji.ng/*"
+  ],
+
 } satisfies Manifest;

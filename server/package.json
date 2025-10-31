@@ -32,6 +32,7 @@
     "elysia-healthcheck": "^1.0.0",
     "env-var": "^7.5.0",
     "ioredis": "^5.7.0",
+    "jsonrepair": "^3.13.1",
     "klavis": "^2.11.1",
     "logestic": "^1.2.4",
     "mastra": "^0.17.0",

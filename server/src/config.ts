@@ -23,7 +23,6 @@ export const config = {
 		.get("GOOGLE_GENERATIVE_AI_API_KEY")
 		.required()
 		.asString(),
-	EXTENSION_ID: env.get("EXTENSION_ID").required().asString(),
 	LOCK_STORE: env
 		.get("LOCK_STORE")
 		.default("memory")
