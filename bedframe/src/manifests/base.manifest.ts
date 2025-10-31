@@ -71,6 +71,7 @@ export const baseManifest = {
     },
   },
   permissions: [
+    "prompt_api",
     "activeTab",
     "storage",
     "tabs",
