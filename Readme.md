@@ -1,10 +1,10 @@
-# Property Data Extractor
+# Property Data Extractor (Propa)
 A browser extension and server solution for real-time property market analysis and data extraction.
 
 ## Features
 - Browser extension for property data capture
 - AI-powered analysis of property listings
-- Market trend visualization
+- Market trends and updated property details
 - Comparable sales analysis
 - Rental yield estimates
 
