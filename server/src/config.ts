@@ -23,12 +23,12 @@ export const config = {
 		.get("GOOGLE_GENERATIVE_AI_API_KEY")
 		.required()
 		.asString(),
-	EXTENSION_ID: env.get("EXTENSION_ID").required().asString(),
 	LOCK_STORE: env
 		.get("LOCK_STORE")
 		.default("memory")
 		.asEnum(["memory", "redis"]),
 	AUTH_CORS: env.get("AUTH_CORS").default("http://localhost:3001").asString().split(","),
+	KLAVIS_API_KEY: env.get("KLAVIS_API_KEY").required().asString(),
 };
 
 export const google = createGoogleGenerativeAI({
