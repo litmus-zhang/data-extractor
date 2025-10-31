@@ -1,6 +1,7 @@
 // src/routes/gigs.ts
 import { Elysia, t } from "elysia";
 import { authGuard, authWrapper } from "./auth.ts";
+import { MastraService } from "../mastra/services/index.ts";
 
 export const gigRoutes = new Elysia()
     .use(authGuard)
@@ -27,10 +28,12 @@ export const gigRoutes = new Elysia()
     })
     .post("/api/analyze", async ({ body: { title, url, content } }) => {
         // Pretend you do NLP, summarization, or categorization here
-        return {
-            summary: `Received "${title}" (${url.length} chars URL, ${content.length} chars content).`,
-            sentiment: "positive"
-        }
+        // analyzing content 
+        // console.log({ title, url, content })
+        const mastraService = new MastraService();
+        const analysis = await mastraService.analyzeProperty(title, url, content);
+        // return JSON.parse(analysis!)
+        return analysis
     }, {
         body: t.Object({
             title: t.String(),

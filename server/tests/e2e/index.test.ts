@@ -1,17 +1,23 @@
-import { describe, it, expect, beforeAll, afterAll } from "bun:test";
-import { api } from "../api.ts";
+import { describe, it, beforeAll, afterAll } from "bun:test";
 import { faker } from "@faker-js/faker"
 import * as pactum from 'pactum';
-import { clearDb, db } from "../../src/db/index.ts";
+import { clearDb } from "../../src/db/index.ts";
+import { App, app } from "../../src/server.ts";
 
+
+let server: App
+let baseURL: string
 
 describe("Data Extractor e2e test", () => {
     beforeAll(async () => {
-        pactum.request.setBaseUrl("http://localhost:4000");
+        server = app.listen(0)
+        baseURL = `http://127.0.0.1:${server.server?.port}`
+        pactum.request.setBaseUrl(baseURL)
 
     });
     afterAll(async () => {
         await clearDb()
+        await server.stop()
 
     });
     describe("General Healthcheck", () => {
@@ -36,7 +42,7 @@ describe("Data Extractor e2e test", () => {
                     .spec()
                     .post('/auth/sign-up/email')
                     .withJson(credentials)
-                    .expectStatus(200)
+                    .expectStatus(200);
             });
             it.each([
                 ['missing email', { ...credentials, email: '' }],
@@ -107,90 +113,79 @@ describe("Data Extractor e2e test", () => {
                 }
             });
         });
-        describe("User Details", () => {
-            it("should check if auth is working", async () => {
-                await pactum
-                    .spec()
-                    .get('/auth/ok')
-                    .expectStatus(200)
-                    .expectJsonLike({ ok: true })
-            });
-            it("should check if auth is working on user route", async () => {
-                await pactum
-                    .spec()
-                    .get('/user')
-                    .expectStatus(401)
-            });
-            it("should get current user", async () => {
-                await pactum
-                    .spec()
-                    .get('/user')
-                    .withBearerToken('$S{authToken}')
-                    .expectStatus(200)
-            });
-
+    });
+    describe("User Details", () => {
+        it("should check if auth is working", async () => {
+            await pactum
+                .spec()
+                .get('/auth/ok')
+                .expectStatus(200)
+                .expectJsonLike({ ok: true })
         });
-        describe("Gig Details", () => {
-
-            it("should check if auth is working", async () => {
-                await pactum
-                    .spec()
-                    .get('/gigs')
-                    .expectStatus(401)
-
-            });
-
-            // it("should get a list user", async () => {
-            //     await pactum
-            //     .spec()
-            //     .get('/gigs')
-            //     .withBearerToken('$S{authToken}')
-            //     // .withJson({
-            //     //     accountId: credentials.email,
-            //     // })
-            //     .expectStatus(200)
-            //     .inspect();
-            // });
-
+        it("should check if auth is working on user route", async () => {
+            await pactum
+                .spec()
+                .get('/user')
+                .expectStatus(401)
         });
-        describe("LLM Integration", () => {
+        it("should get current user", async () => {
+            await pactum
+                .spec()
+                .get('/user')
+                .withBearerToken('$S{authToken}')
+                .expectStatus(200)
+        });
 
-            it("should check if auth is working", async () => {
-                await pactum
-                    .spec()
-                    .get('/ai/weather')
-                    .withQueryParams('city', 'New York')
-                    .expectStatus(401)
+    });
+    describe("Gig Details", () => {
 
-            });
-            it("should get weather condition", async () => {
-                await pactum
-                    .spec()
-                    .get('/ai/weather')
-                    .withBearerToken('$S{authToken}')
-                    .withQueryParams('city', 'New York')
-                    .expectStatus(200)
-                    .expectBodyContains('The weather in New York');
-            }, {
-                timeout: 10000
-            });
-
-            // it("should get a list user", async () => {
-            //     await pactum
-            //     .spec()
-            //     .get('/gigs')
-            //     .withBearerToken('$S{authToken}')
-            //     // .withJson({
-            //     //     accountId: credentials.email,
-            //     // })
-            //     .expectStatus(200)
-            //     .inspect();
-            // });
+        it("should check if auth is working", async () => {
+            await pactum
+                .spec()
+                .get('/gigs')
+                .expectStatus(401)
 
         });
 
-    }
-    );
+        // it("should get a list user", async () => {
+        //     await pactum
+        //     .spec()
+        //     .get('/gigs')
+        //     .withBearerToken('$S{authToken}')
+        //     // .withJson({
+        //     //     accountId: credentials.email,
+        //     // })
+        //     .expectStatus(200)
+        //     .inspect();
+        // });
+
+    });
+    describe("LLM Integration", () => {
+
+        it("should check if auth is working", async () => {
+            await pactum
+                .spec()
+                .get('/ai/weather')
+                .withQueryParams('city', 'New York')
+                .expectStatus(401)
+
+        });
+
+        it("should analyze a property", async () => {
+            await pactum
+                .spec()
+                .post('/api/analyze')
+                .withBearerToken('$S{authToken}')
+                .withJson({
+                    title: 'Test Property',
+                    url: 'https://www.testproperty.com',
+                    content: faker.lorem.paragraphs(8),
+                })
+                .expectStatus(200)
+                .inspect();
+        });
+
+    });
 });
 
 

@@ -1,5 +1,5 @@
 // src/routes/gigs.ts
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { authGuard, authWrapper } from "./auth.ts";
 import { mastra } from "../mastra/index.ts";
 
@@ -23,10 +23,16 @@ export const aiRoutes = new Elysia({ prefix: "/ai" })
     }, {
         auth: true
     })
-    // you can keep adding more gig endpoints here and they’ll inherit the guard
-    .post("/user", ({ body }) => {
-        // body validation etc.
-        return { body };
+      .post("/api/analyze", async ({ body: { title, url, content } }) => {
+        // Pretend you do NLP, summarization, or categorization here
+        return {
+            summary: `Received "${title}" (${url.length} chars URL, ${content.length} chars content).`,
+            sentiment: "positive"
+        }
     }, {
-        auth: true
+        body: t.Object({
+            title: t.String(),
+            url: t.String(),
+            content: t.String()
+        })
     })
