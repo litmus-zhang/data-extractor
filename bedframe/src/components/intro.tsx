@@ -8,86 +8,13 @@ import { PropertyDetails } from "./PropertyDetails";
 import { Spinner } from "./ui/spinner";
 
 export function Intro() {
-  const [analysis, setAnalysis] = useState<any>(null)
-  console.log({ analysis })
   const [response, setResponse] = useState<any>(null)
 
   useEffect(() => {
-    chrome.storage.local.get("lastResponse", (data) => {
-      setResponse(data.lastResponse)
+    chrome.storage.local.get("lastFormattedResponse", (data) => {
+      setResponse(data.lastFormattedResponse)
     })
   }, [])
-
-  //   if (!LanguageModel) {
-  //   // Detect the feature and display "Not Supported" message as needed
-  //   return;
-  // }
-  // // Define default values for topK and temperature within the application
-  // const DEFAULT_TOP_K = 3;
-  // const DEFAULT_TEMPERATURE = 1;
-  // let session;
-
-  // async function createAISession({ initialPrompts, topK, temperature } = {}) {
-  //   const { available, defaultTopK, maxTopK, defaultTemperature } =
-  //     await LanguageModel.availability();
-  //   // "readily", "after-download", or "no"
-  //   if (available === "no") {
-  //     return Promise.reject(new Error('AI not available'));
-  //   }
-  //   const params = {
-  //     monitor(monitor) {
-  //       monitor.addEventListener('downloadprogress', event => {
-  //         console.log(`Downloaded: ${event.loaded} of ${event.total} bytes.`);
-  //       });
-  //     },
-  //     initialPrompts: initialPrompts || '',
-  //     topK: topK || defaultTopK,
-  //     temperature: temperature || defaultTemperature,
-  //   };
-  //   session = await LanguageModel.create(params);
-  //   return session;
-  // }
-
-  // async function updateSession({ initialPrompts, topK, temperature } = {
-  //   topK: DEFAULT_TOP_K,
-  //   temperature: DEFAULT_TEMPERATURE,
-  // }) {
-  //   if (session) {
-  //     session.destroy();
-  //     session = null;
-  //   }
-  //   session = await createAISession({
-  //     initialPrompts,
-  //     topK,
-  //     temperature,
-  //   });
-  // }
-
-  // async function generateFormattedData(api_response: string) {
-  //   // Initialize the model session
-  //   await updateSession({
-  //     initialPrompts: [
-  //       {
-  //         role: 'system',
-  //         content: `Format the following data into a JSON object.`,
-  //       }
-  //     ],
-
-  //   });
-  //   const prompt = `Format the data below into a formatted JSON object: ${api_response}`;
-  //   const result = await session!.prompt(prompt, { responseConstraint: PromptResponseSchema, });
-  //   try {
-  //     const fixedJson = jsonrepair(result);
-  //     // display result
-  //     return fixedJson
-  //   } catch (error) {
-  //     // display error
-  //     throw new Error("Error getting response" + error.message)
-  //   }
-  // }
-
-
-
 
   const bedHead = {
     name: chrome.runtime.getManifest().name,
