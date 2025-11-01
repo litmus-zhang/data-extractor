@@ -19,16 +19,18 @@ chrome.action.onClicked.addListener((tab: chrome.tabs.Tab): void => {
   );
 });
 
-if (!("ai" in self) || !("languageModel" in self.ai)) {
-  console.warn("[SW] The Prompt API (LanguageModel) is not available in this context.");
-}
+
 
 // Define default values for topK and temperature within the application
 const DEFAULT_TOP_K = 3;
 const DEFAULT_TEMPERATURE = 1;
 let session;
 
-async function createAISession({ initialPrompts, topK, temperature } = {}) {
+async function createAISession({ initialPrompts = [], topK = 3, temperature = 1 } = {}){
+  if (!LanguageModel) {
+  console.warn("[SW] The Prompt API (LanguageModel) is not available in this context.");
+  return;
+}
   const { available, defaultTopK, maxTopK, defaultTemperature } =
     await LanguageModel.availability();
   // "readily", "after-download", or "no"
@@ -75,12 +77,12 @@ async function generateFormattedData(api_response: string) {
     ],
 
   });
-  const prompt = `Format the data below into a formatted JSON object: ${api_response}`;
+  const prompt = `Format the data below into a formatted JSON object with the following schema: ${PromptResponseSchema}: ${api_response}`;
   const result = await session!.prompt(prompt, { responseConstraint: PromptResponseSchema, });
   try {
-    const fixedJson = jsonrepair(result);
+    // const fixedJson = jsonrepair(result);
     // display result
-    return fixedJson
+    return result
   } catch (error) {
     // display error
     throw new Error("Error getting response" + error.message)
@@ -107,9 +109,19 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
       })
 
       const result = await response.json()
+      console.log("[SW] Raw backend result:", result);
+
+      const formatted = await generateFormattedData(result);
+      // const formatted = await generateFormattedData( JSON.stringify(payload));
+
 
       // Store response in chrome storage
-      await chrome.storage.local.set({ lastResponse: result })
+      await chrome.storage.local.set({
+        lastRawResponse: result,
+        lastFormattedResponse: JSON.parse(formatted),
+      });
+
+      console.log("[SW] ✅ Saved formatted response:", formatted);
       console.log("Saved response from backend:", result)
     } catch (error) {
       console.error("Failed to send data to backend:", error)
