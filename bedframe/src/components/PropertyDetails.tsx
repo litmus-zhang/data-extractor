@@ -20,7 +20,6 @@ interface PropertyDetailsProps {
 
 export const PropertyDetails = ({ data }: PropertyDetailsProps) => {
   const [loading, setLoading] = useState(false)
-  const [analysis, setAnalysis] = useState<any>(null)
   console.log({ data })
   const analyzePage = async () => {
     setLoading(true)
@@ -37,11 +36,7 @@ export const PropertyDetails = ({ data }: PropertyDetailsProps) => {
     })
 
     const pageData = results[0].result
-    // const analysis = await generateFormattedData(`Analyze the property details in the following text and give the comparable_sales and rental_estimates for other comparable properties:${data}`)
 
-    const analysis = "Hello analysis"
-    console.log({ analysis })
-    setAnalysis(analysis)
 
     try {
       // const res = await fetch(`${import.meta.env.VITE_API_URL}/api/analyze`, {
@@ -60,6 +55,11 @@ export const PropertyDetails = ({ data }: PropertyDetailsProps) => {
     } finally {
       setLoading(false)
     }
+  }
+  const clearCache = () => {
+    chrome.storage.local.remove(["lastFormattedResponse", "lastRawResponse", "lastResponse"], () => console.log("Cacahe cleared"))
+
+    window.location.reload()
   }
   if (!data) {
     return <div>
@@ -80,8 +80,8 @@ export const PropertyDetails = ({ data }: PropertyDetailsProps) => {
             <Button onClick={analyzePage} disabled={loading} size="sm">
               {loading ? "Analyzing..." : "Analyze page"}
             </Button>
-            <Button disabled={loading} variant="outline" size="sm">
-              Add to CRM
+            <Button disabled={loading} onClick={clearCache} variant="outline" size="sm">
+              Clear Cache
             </Button>
           </div>
         </EmptyContent>
@@ -107,21 +107,21 @@ export const PropertyDetails = ({ data }: PropertyDetailsProps) => {
 
       )}
 
-      {/*
+      {/* */}
       {property_details ? (
         <div className='flex flex-col gap-2'>
-          <ItemIcon icon={LinkIcon} title='URL' description={property_details.url ?? 'No URL found'} />
-          <ItemIcon icon={LocateIcon} title='Location' description={property_details.location ?? 'No location found'} />
-          <ItemIcon icon={CircleDollarSign} title='Price' description={property_details.price ?? 'No price found'} />
-          <ItemIcon icon={BedIcon} title='Bedrooms' description={(property_details.beds || property_details.bedrooms) ?? 'No bedrooms found'} />
-          <ItemIcon icon={BathIcon} title='Bathrooms' description={(property_details.baths || property_details.bathrooms) ?? 'No bathrooms found'} />
-          <ItemIcon icon={TypeIcon} title='Property Type' description={property_details.property_type ?? 'No property type found'} />
-          <ItemIcon icon={Popsicle} title='Features' description={(property_details.special_features || property_details.features).join(', ') ?? 'No features found'} />
+          <ItemIcon icon={LinkIcon} title='URL' description={property_details.url} />
+          <ItemIcon icon={LocateIcon} title='Location' description={property_details.location} />
+          <ItemIcon icon={CircleDollarSign} title='Price' description={property_details.price} />
+          <ItemIcon icon={BedIcon} title='Bedrooms' description={(property_details.beds || property_details.bedrooms)} />
+          <ItemIcon icon={BathIcon} title='Bathrooms' description={(property_details.baths || property_details.bathrooms)} />
+          <ItemIcon icon={TypeIcon} title='Property Type' description={property_details.property_type} />
+          <ItemIcon icon={Popsicle} title='Features' description={(property_details.special_features || property_details.features).join(', ')} />
         </div>
       ) : (
         <p>No property details found.</p>
       )}
- 
+
 
       {ai_summary && (
         <div className='flex flex-col gap-2'>
@@ -132,10 +132,10 @@ export const PropertyDetails = ({ data }: PropertyDetailsProps) => {
 
         </div>
       )}
-*/}
+
       {comparable_sales ? (
         <div>
-          <ItemIcon icon={Scale} title='Comparable Sales' description={comparable_sales} />
+          <ItemIcon icon={Scale} title='Comparable Sales' description={comparable_sales.join(', ')} />
         </div>
       ) : (
         <p>No comparable sales found.</p>
@@ -154,6 +154,15 @@ export const PropertyDetails = ({ data }: PropertyDetailsProps) => {
         :
         <p>No price per square foot analytics found.</p>
       }
+      <div className="flex gap-2 items-center">
+
+        <Button onClick={analyzePage} disabled={loading} size="sm">
+          {loading ? <><Spinner /> Analyzing...</> : "Analyze page"}
+        </Button>
+        <Button disabled={loading} onClick={clearCache} variant="outline" size="sm">
+          Clear Cache
+        </Button>
+      </div>
     </div>
   );
 };
